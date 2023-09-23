@@ -1,8 +1,4 @@
-import React, { useContext } from "react";
-import { CartProductDetails } from "./ProductViewCart";
-
-export default function ModalProductDetails() {
-  const product = useContext(CartProductDetails);
+export default function ModalProductDetails({ product }) {
   return (
     <article>
       <div>Product Name: {product.name}</div>

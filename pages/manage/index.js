@@ -91,7 +91,6 @@ export default function Manage() {
     } else if (!existingData) {
       const newData = [...products];
       localStorage.setItem("myData", JSON.stringify(newData));
-      console.log("ASADASD");
       setAddedToList(newData);
     }
   }, [products]);
@@ -148,6 +147,7 @@ export default function Manage() {
           <input
             required
             type="number"
+            min="0"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />

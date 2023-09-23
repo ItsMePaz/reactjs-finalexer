@@ -13,7 +13,6 @@ function Cart() {
       const parsedData = JSON.parse(existingCartData);
 
       setProductCartList(parsedData);
-      console.log("asdas" + parsedData);
     }
   }, []);
 

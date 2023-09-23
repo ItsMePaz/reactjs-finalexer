@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ProductViewOnly from "../components/ProductViewOnly";
 
@@ -13,7 +13,6 @@ export default function Shop() {
     const existingData = localStorage.getItem("myData");
     const parsedData = JSON.parse(existingData);
     setProductList(parsedData);
-    console.log(productList);
   }, []);
 
   return (

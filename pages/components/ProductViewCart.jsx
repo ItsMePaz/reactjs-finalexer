@@ -38,7 +38,6 @@ function ProductViewCart() {
         uniqueProducts.push(product);
       });
       localStorage.setItem("priceTotal", JSON.stringify(uniqueProducts));
-      console.log(localStorage.getItem("priceTotal"));
     }
   }
 
@@ -54,7 +53,6 @@ function ProductViewCart() {
       "priceTotal",
       JSON.stringify(parsedListOfProductQuantity)
     );
-    console.log(localStorage.getItem("priceTotal"));
   }
 
   function removeFromCartLocalStorage(id) {
@@ -84,7 +82,7 @@ function ProductViewCart() {
         <div className="modal-position">
           <button onClick={handleCloseModal}>X</button>
           <CartProductDetails.Provider value={product}>
-            <ModalProductDetails />
+            <ModalProductDetails product={product} />
           </CartProductDetails.Provider>
           <span>Qty :</span>
           <span>{quantity}</span>

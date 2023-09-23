@@ -1,18 +1,17 @@
 import { useContext, useState } from "react";
-import { LocallyPersistedProducts, ProductDispatch } from "../manage";
+import { LocallyPersistedProducts } from "../manage";
 
 function EditModal({ setEditModal, productId }) {
   const [updateName, setUpdateName] = useState("");
   const [updateDescription, setUpdateDescription] = useState("");
   const [updatePrice, setUpdatePrice] = useState();
-  const dispatch = useContext(ProductDispatch);
   const products = useContext(LocallyPersistedProducts);
 
   function handleCloseEditModal() {
     setEditModal(false);
   }
-
-  function updateFromLocalStorage(id) {
+  //this function merges and persists the new product data
+  function updateToLocalStorage(id) {
     const indexOfProductToUpdate = products.findIndex(
       (product) => product.id === id
     );
@@ -22,27 +21,25 @@ function EditModal({ setEditModal, productId }) {
         ...updatedProducts[indexOfProductToUpdate],
         name: updateName,
         description: updateDescription,
-        price: updatePrice, // Update the value here
+        price: updatePrice,
       };
 
       const newData = updatedProducts;
       const combinedData = [...newData];
       localStorage.setItem("myData", JSON.stringify(combinedData));
 
-      console.log(localStorage);
-      console.log(updatedProducts);
-
       setUpdateName("");
       setUpdateDescription("");
       setUpdatePrice("");
     }
   }
+
   return (
     <div>
       <button onClick={handleCloseEditModal}>X</button>
       <form
         onSubmit={() => {
-          updateFromLocalStorage(productId);
+          updateToLocalStorage(productId);
         }}
       >
         <div>
@@ -68,6 +65,7 @@ function EditModal({ setEditModal, productId }) {
           <input
             required
             type="number"
+            min="0"
             value={updatePrice}
             onChange={(e) => setUpdatePrice(e.target.value)}
           />

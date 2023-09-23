@@ -1,14 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { LocallyPersistedProduct } from "../shop";
+import ModalProductDetails from "./ModalProductDetails";
 
 function ModalViewOnly({ setViewOnlyModal }) {
   const product = useContext(LocallyPersistedProduct);
   const router = useRouter();
+
+  function checkOut() {
+    router.push({
+      pathname: "/shop/checkout",
+      query: {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+      },
+    });
+  }
+
   function handleCloseModal() {
     setViewOnlyModal(false);
   }
 
+  //this function navigates the user to the shareable
+  //url of the specific product
   function goToLink() {
     router.push(
       {
@@ -27,6 +43,7 @@ function ModalViewOnly({ setViewOnlyModal }) {
     );
   }
 
+  //this function persists items added to the cart to the local storage
   function addToLocalCart() {
     const existingListOfProductQuantity = localStorage.getItem("priceTotal");
     const localCartStorage = localStorage.getItem("addedToCart");
@@ -48,12 +65,15 @@ function ModalViewOnly({ setViewOnlyModal }) {
         const newData = product;
         const combinedProducts = [...parsedExistingProduct, newData];
         localStorage.setItem("addedToCart", JSON.stringify(combinedProducts));
-        console.log(combinedProducts);
         alert("Successfully added " + product.name + " to cart.");
         setViewOnlyModal(false);
       }
     }
 
+    //merge and persist products added to the cart
+    //allowing multiple duplicates which was
+    //intended to sum up the total number of items
+    //and total cost
     if (!existingListOfProductQuantity) {
       const newData = [product];
       localStorage.setItem("priceTotal", JSON.stringify(newData));
@@ -74,29 +94,14 @@ function ModalViewOnly({ setViewOnlyModal }) {
           uniqueProducts.push(product);
         });
         localStorage.setItem("priceTotal", JSON.stringify(uniqueProducts));
-        console.log(localStorage.getItem("priceTotal"));
       }
     }
-  }
-
-  function checkOut() {
-    router.push({
-      pathname: "/shop/checkout",
-      query: {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-      },
-    });
   }
 
   return (
     <article>
       <button onClick={handleCloseModal}>X</button>
-      <div>Product Name: {product.name}</div>
-      <div>Description: {product.description}</div>
-      <div>Price: {product.price}</div>
+      <ModalProductDetails product={product} />
       <button onClick={goToLink}>Go to link</button>
       <button onClick={addToLocalCart}>Add to Cart</button>
       <button onClick={checkOut}>Buy Now</button>
