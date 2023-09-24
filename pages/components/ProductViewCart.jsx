@@ -2,6 +2,7 @@ import React, { createContext, useEffect } from "react";
 import { useState, useContext } from "react";
 import { LocallyPersistedProductCart } from "../shop/cart";
 import ModalProductDetails from "./ModalProductDetails";
+import productServices from "../services/productServices";
 
 export const CartProductDetails = createContext();
 
@@ -22,53 +23,66 @@ function ProductViewCart() {
   function handleCloseModal() {
     setViewOnlyModal(false);
   }
-
+  ////////
   function increment() {
     setQuantity((previousQuantity) => previousQuantity + 1);
     const existingListOfProductQuantity = localStorage.getItem("priceTotal");
     if (existingListOfProductQuantity) {
-      const parsedListOfProductQuantity =
-        JSON.parse(existingListOfProductQuantity) || [];
+      /*  const parsedListOfProductQuantity =
+        JSON.parse(existingListOfProductQuantity) || []; //import */
       const combinedData = [
-        ...new Set([...parsedListOfProductQuantity, product]),
+        ...new Set([
+          ...[
+            productServices.getAndParseArrayDataFromLocalStorage("priceTotal"),
+          ],
+          product,
+        ]),
       ];
 
       const uniqueProducts = [];
       combinedData.forEach((product) => {
         uniqueProducts.push(product);
       });
-      localStorage.setItem("priceTotal", JSON.stringify(uniqueProducts));
+      /*   localStorage.setItem("priceTotal", JSON.stringify(uniqueProducts)); */ //import
+      productServices.setItemToLocalStorage("priceTotal", uniqueProducts);
     }
   }
 
   function decrement() {
     setQuantity((previousQuantity) => previousQuantity - 1);
-    const existingListOfProductQuantity =
-      localStorage.getItem("priceTotal") || [];
+    /*  const existingListOfProductQuantity =
+      localStorage.getItem("priceTotal") || []; //import
     const parsedListOfProductQuantity = JSON.parse(
       existingListOfProductQuantity
     );
     parsedListOfProductQuantity.pop();
     localStorage.setItem(
       "priceTotal",
-      JSON.stringify(parsedListOfProductQuantity)
-    );
+      JSON.stringify(parsedListOfProductQuantity) //import
+    ); */
+
+    const existingArray =
+      productServices.getAndParseArrayDataFromLocalStorage("priceTotal");
+    existingArray.pop();
+
+    productServices.setItemToLocalStorage("priceTotal", existingArray);
   }
 
-  function removeFromCartLocalStorage(id) {
+  /* function removeFromCartLocalStorage(id) {
+    
     const existingData = localStorage.getItem("addedToCart");
     const parsedData = JSON.parse(existingData);
     const updatedData = parsedData.filter((product) => product.id !== id);
     localStorage.setItem("addedToCart", JSON.stringify([...updatedData]));
-  }
+  } */ //import
 
   useEffect(() => {
     if (quantity === 0) {
-      removeFromCartLocalStorage(product.id);
+      productServices.removeFromLocalStorage(product.id, "addedToCart"); //
       setViewOnlyModal(false);
       window.location.reload();
     }
-  }, [increment]);
+  }, [decrement]);
 
   return (
     <article>

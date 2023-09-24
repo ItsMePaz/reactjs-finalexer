@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { LocallyPersistedProduct } from "../shop";
 import ModalProductDetails from "./ModalProductDetails";
+import productServices from "../services/productServices";
 
 function ModalViewOnly({ setViewOnlyModal }) {
   const product = useContext(LocallyPersistedProduct);
@@ -23,7 +24,7 @@ function ModalViewOnly({ setViewOnlyModal }) {
     setViewOnlyModal(false);
   }
 
-  //this function navigates the user to the shareable
+  //this function navigates the user to the
   //url of the specific product
   function goToLink() {
     router.push(
@@ -43,28 +44,34 @@ function ModalViewOnly({ setViewOnlyModal }) {
     );
   }
 
-  //this function persists items added to the cart to the local storage
+  //this function persists items added to the cart into the local storage
+  //and also handles the alert of when an item is succesfully added
+  //or not added if item already exists in the cart
   function addToLocalCart() {
     const existingListOfProductQuantity = localStorage.getItem("priceTotal");
     const localCartStorage = localStorage.getItem("addedToCart");
     const parsedExisting = JSON.parse(localCartStorage);
 
     if (!localCartStorage) {
-      const newData = product;
-      localStorage.setItem("addedToCart", JSON.stringify([newData]));
+      const newData = [product];
+      productServices.setItemToLocalStorage("addedToCart", newData);
       alert("Successfully added " + product.name + " to cart.");
       setViewOnlyModal(false);
-    } else if (localCartStorage) {
-      const isCartAdded = parsedExisting.some(
-        (item) => JSON.stringify(item.id) === JSON.stringify(product.id)
-      );
-      if (isCartAdded === true) {
+    } else {
+      if (
+        productServices.checkObjectExistence(parsedExisting, product.id) ===
+        true
+      ) {
         alert("Product is already added to the cart");
-      } else if (isCartAdded === false) {
-        const parsedExistingProduct = JSON.parse(localCartStorage) || [];
+      } else {
         const newData = product;
-        const combinedProducts = [...parsedExistingProduct, newData];
-        localStorage.setItem("addedToCart", JSON.stringify(combinedProducts));
+        const combinedProducts = [
+          ...productServices.getAndParseArrayDataFromLocalStorage(
+            "addedToCart"
+          ),
+          newData,
+        ];
+        productServices.setItemToLocalStorage("addedToCart", combinedProducts);
         alert("Successfully added " + product.name + " to cart.");
         setViewOnlyModal(false);
       }
@@ -76,24 +83,29 @@ function ModalViewOnly({ setViewOnlyModal }) {
     //and total cost
     if (!existingListOfProductQuantity) {
       const newData = [product];
-      localStorage.setItem("priceTotal", JSON.stringify(newData));
+      productServices.setItemToLocalStorage("priceTotal", newData);
     } else if (existingListOfProductQuantity) {
-      const isCartAdded = parsedExisting.some(
-        (item) => JSON.stringify(item.id) === JSON.stringify(product.id)
-      );
-      if (isCartAdded === true) {
+      if (
+        productServices.checkObjectExistence(parsedExisting, product.id) ===
+        true
+      ) {
         null;
       } else {
-        const parsedListOfProductQuantity =
-          JSON.parse(existingListOfProductQuantity) || [];
         const combinedData = [
-          ...new Set([...parsedListOfProductQuantity, product]),
+          ...new Set([
+            ...[
+              productServices.getAndParseArrayDataFromLocalStorage(
+                "priceTotal"
+              ),
+            ],
+            product,
+          ]),
         ];
         const uniqueProducts = [];
         combinedData.forEach((product) => {
           uniqueProducts.push(product);
         });
-        localStorage.setItem("priceTotal", JSON.stringify(uniqueProducts));
+        productServices.setItemToLocalStorage("priceTotal", uniqueProducts);
       }
     }
   }

@@ -10,8 +10,8 @@ export default function Shop() {
   const router = useRouter();
 
   useEffect(() => {
-    const existingData = localStorage.getItem("myData");
-    const parsedData = JSON.parse(existingData);
+    const existingData = localStorage.getItem("myData"); //import
+    const parsedData = JSON.parse(existingData); //import
     setProductList(parsedData);
   }, []);
 
