@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import ProductViewCart from "@/pages/components/ProductViewCart";
+import ProductViewCart from "@/pages/components/for-cart-page/ProductViewCart";
 import { useRouter } from "next/router";
 
 export const LocallyPersistedProductCart = createContext();
@@ -11,7 +11,6 @@ function Cart() {
     const existingCartData = localStorage.getItem("addedToCart");
     if (existingCartData) {
       const parsedData = JSON.parse(existingCartData);
-
       setProductCartList(parsedData);
     }
   }, []);
@@ -27,9 +26,9 @@ function Cart() {
         {productCartList
           ? productCartList.map((product) => {
               return (
-                <li>
+                <li key={product.id}>
                   <LocallyPersistedProductCart.Provider value={product}>
-                    <ProductViewCart key={product.id} />
+                    <ProductViewCart />
                   </LocallyPersistedProductCart.Provider>
                 </li>
               );

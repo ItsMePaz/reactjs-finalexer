@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
-import { LocallyPersistedProduct } from "../shop";
-import ModalProductDetails from "./ModalProductDetails";
-import productServices from "../services/productServices";
+import { LocallyPersistedProduct } from "../../shop";
+import ModalProductDetails from "../for-cart-page/ModalProductDetails";
+import productServices from "../../services/productServices";
 
 function ModalViewOnly({ setViewOnlyModal }) {
   const product = useContext(LocallyPersistedProduct);
@@ -91,21 +91,16 @@ function ModalViewOnly({ setViewOnlyModal }) {
       ) {
         null;
       } else {
-        const combinedData = [
-          ...new Set([
-            ...[
-              productServices.getAndParseArrayDataFromLocalStorage(
-                "priceTotal"
-              ),
-            ],
-            product,
-          ]),
+        const updatedList = [
+          ...productServices.getAndParseArrayDataFromLocalStorage("priceTotal"),
+
+          product,
         ];
-        const uniqueProducts = [];
-        combinedData.forEach((product) => {
+
+        /*    combinedData.forEach((product) => {
           uniqueProducts.push(product);
-        });
-        productServices.setItemToLocalStorage("priceTotal", uniqueProducts);
+        }); */
+        productServices.setItemToLocalStorage("priceTotal", updatedList);
       }
     }
   }

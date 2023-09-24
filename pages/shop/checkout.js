@@ -9,10 +9,11 @@ export default function Checkout() {
 
   const router = useRouter();
 
+  //this side effect updates the data shown in the checkout page on load
   useEffect(() => {
     const totalItems = localStorage.getItem("priceTotal");
     if (totalItems) {
-      const parsedTotalItems = JSON.parse(totalItems);
+      const parsedTotalItems = JSON.parse(totalItems) || [];
       setItems(parsedTotalItems);
 
       setPrices(parsedTotalItems.map((product) => parseInt(product.price)));

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useContext } from "react";
-import { LocallyPersistedProduct } from "../shop";
+import { LocallyPersistedProduct } from "../../shop";
 import ModalViewOnly from "./ModalViewOnly";
 
+//this function handles the view button in the /manage
 function ProductViewOnly() {
   const [viewOnlyModal, setViewOnlyModal] = useState(false);
   const product = useContext(LocallyPersistedProduct);

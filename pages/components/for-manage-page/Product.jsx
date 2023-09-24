@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { ACTIONS, ProductDetails, ProductDispatch } from "../manage";
+import { ACTIONS, ProductDetails, ProductDispatch } from "../../manage";
 import ViewModal from "./ViewModal";
-import productServices from "../services/productServices";
+import productServices from "../../services/productServices";
 
 //this function handles the view and delete button
 //in the manage products page

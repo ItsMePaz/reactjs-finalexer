@@ -25,9 +25,22 @@ function removeFromLocalStorage(id, storageKey) {
   return localStorage.setItem(storageKey, JSON.stringify(updatedData));
 }
 
+function countProductOccuranceInStorage(storageKey, id) {
+  const productArray = getAndParseArrayDataFromLocalStorage(storageKey);
+  let listEachOccurances = [];
+  productArray.forEach((product) => {
+    if (product.id === id) {
+      listEachOccurances.push(product);
+    }
+  });
+
+  return listEachOccurances.length;
+}
+
 export default {
   getAndParseArrayDataFromLocalStorage,
   setItemToLocalStorage,
   checkObjectExistence,
   removeFromLocalStorage,
+  countProductOccuranceInStorage,
 };

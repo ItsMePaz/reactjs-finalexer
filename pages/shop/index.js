@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import ProductViewOnly from "../components/ProductViewOnly";
+import ProductViewOnly from "../components/for-shop-page/ProductViewOnly";
+import productServices from "../services/productServices";
 
 export const LocallyPersistedProduct = createContext();
 
@@ -10,9 +11,9 @@ export default function Shop() {
   const router = useRouter();
 
   useEffect(() => {
-    const existingData = localStorage.getItem("myData"); //import
-    const parsedData = JSON.parse(existingData); //import
-    setProductList(parsedData);
+    setProductList(
+      productServices.getAndParseArrayDataFromLocalStorage("myData")
+    );
   }, []);
 
   return (
@@ -24,9 +25,9 @@ export default function Shop() {
         {productList
           ? productList.map((product) => {
               return (
-                <li>
+                <li key={product.id}>
                   <LocallyPersistedProduct.Provider value={product}>
-                    <ProductViewOnly key={product.id} />
+                    <ProductViewOnly />
                   </LocallyPersistedProduct.Provider>
                 </li>
               );

@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer, useState } from "react";
 import { useRouter } from "next/router";
-import Product from "../components/Product";
+import Product from "../components/for-manage-page/Product";
 
 export const ProductDetails = createContext();
 export const ProductDispatch = createContext();
@@ -76,7 +76,7 @@ export default function Manage() {
     const existingData = localStorage.getItem("myData");
     if (existingData) {
       const parsedData = JSON.parse(existingData) || [];
-      const combinedData = [...new Set([...parsedData, ...products])];
+      const combinedData = [...new Set([...parsedData, ...products])]; //import
       const uniqueSet = new Set();
       const uniqueProducts = [];
       combinedData.forEach((product) => {
@@ -86,11 +86,11 @@ export default function Manage() {
           uniqueProducts.push(product);
         }
       });
-      localStorage.setItem("myData", JSON.stringify(uniqueProducts));
+      localStorage.setItem("myData", JSON.stringify(uniqueProducts)); //import
       setAddedToList([...uniqueProducts]);
     } else if (!existingData) {
       const newData = [...products];
-      localStorage.setItem("myData", JSON.stringify(newData));
+      localStorage.setItem("myData", JSON.stringify(newData)); //import
       setAddedToList(newData);
     }
   }, [products]);
@@ -104,11 +104,11 @@ export default function Manage() {
         {addedToList
           ? addedToList.map((product) => {
               return (
-                <li>
+                <li key={product.id}>
                   <LocallyPersistedProducts.Provider value={addedToList}>
                     <ProductDetails.Provider value={product}>
                       <ProductDispatch.Provider value={dispatch}>
-                        <Product key={product.id} />
+                        <Product />
                       </ProductDispatch.Provider>
                     </ProductDetails.Provider>
                   </LocallyPersistedProducts.Provider>
@@ -126,7 +126,7 @@ export default function Manage() {
           <input
             required
             type="text"
-            value={name}
+            value={name ?? ""}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -137,7 +137,7 @@ export default function Manage() {
           <input
             required
             type="text"
-            value={description}
+            value={description ?? ""}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
@@ -148,7 +148,7 @@ export default function Manage() {
             required
             type="number"
             min="0"
-            value={price}
+            value={price ?? ""}
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>

@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
-import { ProductDetails, ProductDispatch } from "../manage";
+import { ProductDetails, ProductDispatch } from "../../manage";
 import EditModal from "./EditModal";
 
 function ViewModal({ setViewModal }) {
   const [editModal, setEditModal] = useState(false);
   const product = useContext(ProductDetails);
-  const dispatch = useContext(ProductDispatch);
 
   function handleCloseModal() {
     setViewModal(false);
